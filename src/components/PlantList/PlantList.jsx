@@ -1,22 +1,30 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector} from 'react-redux';
-
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 function PlantList() {
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
-    const reduxState = useSelector(store => store);
+  const reduxState = useSelector((store) => store.plantList);
 
-    useEffect(() => {
-        // dispatch an action to request the plantList from the API
-    }, []); 
+  function deletePlant(id) {
+    dispatch({ type: "DELETE_PLANT", payload: id });
+  }
 
-    return (
-        <div>
-            <h3>This is the plant list</h3>
-            <pre>{JSON.stringify(reduxState)}</pre>
-        </div>
-    );
+  useEffect(() => {
+    dispatch({ type: "FETCH_PLANTS" }); // dispatch an action to request the plantList from the API
+  }, []);
+
+  return (
+    <div>
+      <h3>This is the plant list</h3>
+      {reduxState.map((plant) => (
+        <li key={plant.id}>
+          {plant.name}{" "}
+          <button onClick={() => deletePlant(plant.id)}>Delete</button>{" "}
+        </li>
+      ))}
+    </div>
+  );
 }
 
 export default PlantList;
